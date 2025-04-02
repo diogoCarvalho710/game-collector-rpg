@@ -15,6 +15,15 @@ def parse_grid_elements(driver, wait, href):
 
     listHrefsGrid = []
     dictGridOptions = dict()
+    listIds = []
+
+    def idGenerator():
+        if len(listIds) == 0:
+            id = 1
+        else:
+            id = max(listIds) + 1
+        listIds.append(id)
+        return id
 
     for element in gridElements:
         hrefGrid = element.get_attribute("href")
@@ -29,6 +38,7 @@ def parse_grid_elements(driver, wait, href):
             listHrefsGrid.append(productLine)
 
             dictGridOptions[titleGrid] = {
+                "id": idGenerator(),
                 "title": titleGrid,
                 "url": hrefGrid,
                 "image": imgGrid,
@@ -40,13 +50,10 @@ def parse_grid_elements(driver, wait, href):
                 "hub_acessorios": True if "Acessórios" in titleGrid else False,
                 "hub_jogos": (
                     True
-                    if "Jogos" in titleGrid
-                    and "Consolas" not in titleGrid
-                    and "Acessórios" not in titleGrid
+                    if "Jogos" in titleGrid and "Acessórios" not in titleGrid
                     else False
                 ),
             }
         else:
             continue
-    print("returned", "parse_grid_elements")
     return dictGridOptions

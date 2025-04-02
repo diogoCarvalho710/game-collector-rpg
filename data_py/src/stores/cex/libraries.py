@@ -8,3 +8,4 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import os
 from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
+from urllib.parse import quote, unquote

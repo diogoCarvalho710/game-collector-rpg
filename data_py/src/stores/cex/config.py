@@ -13,9 +13,9 @@ def setup_driver():
     ### Selenium Firefox
     service = Service(executable_path="/snap/bin/geckodriver")
     options = Options()
-    options.add_argument("-headless")
+    # options.add_argument("-headless")
     options.profile = firefox_profile
     driver = webdriver.Firefox(service=service, options=options)
 
     print("returned", "setup_driver")
-    return driver, WebDriverWait(driver, 10)
+    return driver, WebDriverWait(driver, 25)

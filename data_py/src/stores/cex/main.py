@@ -5,10 +5,12 @@ from libraries import *
 from config import setup_driver
 from landing_page import get_navigation_bar
 from console_games_select_page import parse_grid_elements
+from grid_per_gridJogos import gridPerGridElement
 
 
 def main():
-    # Setup
+    ######### Setup:
+    ## Driver + Wait on Elements
     driver, wait = setup_driver()
 
     ### Page to Scrap + BS4 Setup
@@ -17,36 +19,23 @@ def main():
     soup = BeautifulSoup(driver.page_source, "html.parser")
 
     ######### Home Page:
-    ## Home Page: Allows to Wait for Elements to Load
-
-    # Get navigation bar
+    ## Get navigation bar
     dictNavigationBar = get_navigation_bar(driver, wait)
 
     ## Home Page End: Move to "Jogos Tab"
     driver.get(dictNavigationBar["Jogos"]["url"])
 
-    ##### "Jogos Tab"
-    # Jogos Software -> por cada elemento X jogos fazer -> ... ||jogos
-    # Jogos Retro -> por cada elemento X jogos fazer -> ... ||jogos
-    # PC Jogos -> por cada elemento X jogos fazer -> ... ||jogos
-    # Jogos Consolas por cada elemento X jogos fazer -> ... ||consolas
-    #
-    # #### 1º
-    # Fazer parecido ao dictNavigationBar:
-    # ex: {3DS:{"title":"3DS","url":"url",elementName:"parecido ao nav-link-2",category:"games"}}
+    ######### Jogos Navigation Menu:
+    ## Get Grid Elements
+    jogosUrl = dictNavigationBar["Jogos"]["url"]
+    dictGridOptions = parse_grid_elements(driver, wait, jogosUrl)
 
-    # Parse grid elements
-    href = dictNavigationBar["Jogos"]["url"]
-    dictGridOptions = parse_grid_elements(driver, wait, href)
-
-    print(dictGridOptions)
-
-    # #### 2º
-    # Os titles que interessam são os que têm "jogos" mas não "acessórios"
-    #
-
+    ## Get Grid per Grid Element
+    dictGridPerGridEleement = gridPerGridElement(driver, wait, dictGridOptions)
+    print(dictGridPerGridEleement)
     driver.quit()
-####
 
+
+####
 if __name__ == "__main__":
     main()
