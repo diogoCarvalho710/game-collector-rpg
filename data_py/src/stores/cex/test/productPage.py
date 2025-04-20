@@ -113,7 +113,7 @@ def getProductNameAndProductCategory():
     h1 = tag.find_element(By.TAG_NAME, "h1")
     productName = h1.text
 
-    print(productCategory, productName)
+    return productCategory, productName
 
 
 def getProductStock():
@@ -143,9 +143,9 @@ def getProductStock():
 
     if len(outOfStock) > 0 and len(inStock) == 0:
         # Return variable Out of Stock = True
-        print("Out of stock")
+        return False
     elif len(inStock) > 0 and len(outOfStock) == 0:
-        print("In stock")
+        return True
     else:
         # Gerar Erro
         x = 1
@@ -163,22 +163,22 @@ def getStoresStock():
             )
         )
     )
-
     tag.click()
-
     see_all_stores_button = wait.until(
         EC.element_to_be_clickable(
             (By.XPATH, "//button[contains(.,'Ver em todas as lojas')]")
         )
     )
-
     see_all_stores_button.click()
     time.sleep(3)
-
     storesList = wait.until(
         EC.presence_of_element_located((By.CLASS_NAME, "store-list"))
     )
     stores = storesList.find_elements(By.CLASS_NAME, "store-card")
+
+    # Create the main dictionary to store all store information
+    dictionary = {}
+
     for store in stores:
         # Nome
         storeName = (store.find_element(By.TAG_NAME, "span")).text
@@ -188,20 +188,19 @@ def getStoresStock():
         stock_div = store.find_element(
             By.CSS_SELECTOR, cssSelectorReplacer("text-sm mb-xs")
         )
-
         # Get the complete text
         full_text = stock_div.text  # This will be something like "1 Em stock"
-
         # Use regex to extract only the number
         stockNumber = re.search(r"(\d+)", full_text)
         if stockNumber:
             stockNumber = full_text.split(" ", 1)[0]
-            int(stockNumber)
+            stockNumber = int(stockNumber)
         else:
             stockNumber = "0"
         print(stockNumber)
 
         # Click and Collect || True or False
+        collect_in_store = "False"
         if (
             len(
                 store.find_elements(
@@ -228,17 +227,31 @@ def getStoresStock():
                 print("No Click")
             else:
                 print("Click")
+                collect_in_store = "True"
         else:
             print("No Click & Collect information found")
 
+        # Add this store's info to the main dictionary
+        dictionary[storeName] = {
+            "store name": storeName,
+            "stock": str(stockNumber),
+            "collect in store": collect_in_store,
+        }
 
-getProductImage()
-getProductPrices()
-getProductNameAndProductCategory()
-getProductStock()
-getStoresStock()
+    return dictionary
 
 
 def productData():
     imagePath = getProductImage()
     buyPrice, sellVoucherPrice, sellCashPrice = getProductPrices()
+    productCategory, productName = getProductNameAndProductCategory()
+    inStock = getProductStock()
+    dictStoresStock = getStoresStock()
+    print("Image Path: ", imagePath)
+    print("Image Prices: ", buyPrice, sellVoucherPrice, sellCashPrice)
+    print("Product: ", productCategory, productName)
+    print("In Stock: ", inStock)
+    print("Stores Dict: ", dictStoresStock)
+
+
+productData()
