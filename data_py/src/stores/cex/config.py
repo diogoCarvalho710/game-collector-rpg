@@ -2,7 +2,6 @@ from libraries import *
 
 
 def setup_driver():
-    print("Process has started!")
 
     ### Firefox Cookies CeX Profile:
     firefox_profile_path = os.path.expanduser(
@@ -16,6 +15,6 @@ def setup_driver():
     # options.add_argument("-headless")
     options.profile = firefox_profile
     driver = webdriver.Firefox(service=service, options=options)
-
+    print("Config Setup!")
     print("returned", "setup_driver")
     return driver, WebDriverWait(driver, 25)

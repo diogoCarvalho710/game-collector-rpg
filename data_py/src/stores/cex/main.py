@@ -6,6 +6,7 @@ from config import setup_driver
 from landing_page import get_navigation_bar
 from console_games_select_page import parse_grid_elements
 from grid_per_gridJogos import gridPerGridElement
+from get_products import getProducts
 
 
 def main():
@@ -32,7 +33,9 @@ def main():
 
     ## Get Grid per Grid Element
     dictGridPerGridEleement = gridPerGridElement(driver, wait, dictGridOptions)
-    print(dictGridPerGridEleement)
+    # print(dictGridPerGridEleement)
+
+    dictProductPerGridElement = getProducts(driver, wait, dictGridPerGridEleement)
     driver.quit()
 
 
